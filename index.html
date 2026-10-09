@@ -1,185 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Barber Lit Nath</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Barber Lit Nath</title>
+    
+    <!-- PWA Manifest & Icons -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/color-glass/512/barber-clippers.png">
+    <link rel="icon" type="image/png" href="https://img.icons8.com/color-glass/512/barber-clippers.png">
 
-  <!-- PWA Manifest & Styles -->
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
 
-  <!-- Íconos para la app en iPhone -->
-  <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/neon-tint/512/barber-clippers.png">
-  <link rel="apple-touch-icon" href="https://img.icons8.com/neon-tint/512/barber-clippers.png">
-  <link rel="icon" type="image/png" href="https://img.icons8.com/neon-tint/512/barber-clippers.png">
-  
-  <meta name="theme-color" content="#050505">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- iOS Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0d0a1d">
 </head>
 <body>
 
-  <!-- Encabezado / Header -->
-  <header class="app-header">
-    <div class="logo-container" style="display: flex; align-items: center; gap: 12px;">
-      <div style="width: 45px; height: 45px; background: linear-gradient(135deg, #6a11cb, #2575fc); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 0 15px rgba(106, 17, 203, 0.4);">
-        ✂️
-      </div>
-      <div>
-        <h1 class="app-title" style="margin: 0; font-size: 20px; font-weight: bold;">Barber Lit Nath</h1>
-        <p class="app-subtitle" style="margin: 0; opacity: 0.7; font-size: 13px;">Sistema de fidelización</p>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-    
-    <!-- DASHBOARD -->
-    <div style="margin-top: 15px;">
-      <span style="color: #00d2ff; font-size: 11px; font-weight: bold; letter-spacing: 1.5px;">DASHBOARD</span>
-      <h2 style="margin: 4px 0 2px 0; font-size: 22px;">Bienvenido, Natanael 👋</h2>
-      <p style="margin: 0 0 20px 0; opacity: 0.6; font-size: 13px;">Administra fácilmente los cortes y beneficios de tus clientes.</p>
-    </div>
-
-    <!-- Tarjetas de Estadísticas -->
-    <section class="stats-section">
-      <div class="stat-card" style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #121216; border-radius: 14px; border: 1px solid #22222a; margin-bottom: 10px;">
-        <div style="width: 48px; height: 48px; background: #231942; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">👥</div>
-        <div>
-          <span style="display: block; opacity: 0.6; font-size: 12px;">Clientes</span>
-          <span class="stat-value" id="totalClients" style="font-size: 22px; font-weight: bold;">0</span>
+    <!-- Encabezado / Header -->
+    <header class="app-header">
+        <div class="logo-container">
+            <div class="logo-icon">✂️</div>
+            <div>
+                <h1 class="app-title">Barber Lit Nath</h1>
+                <p class="app-subtitle">Sistema de fidelización</p>
+            </div>
         </div>
-      </div>
+    </header>
 
-      <div class="stat-card" style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #121216; border-radius: 14px; border: 1px solid #22222a; margin-bottom: 10px;">
-        <div style="width: 48px; height: 48px; background: #231942; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">✂️</div>
-        <div>
-          <span style="display: block; opacity: 0.6; font-size: 12px;">Cortes registrados</span>
-          <span class="stat-value" id="totalCuts" style="font-size: 22px; font-weight: bold;">0</span>
-        </div>
-      </div>
-
-      <div class="stat-card" style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #121216; border-radius: 14px; border: 1px solid #22222a; margin-bottom: 15px;">
-        <div style="width: 48px; height: 48px; background: #231942; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">🎁</div>
-        <div>
-          <span style="display: block; opacity: 0.6; font-size: 12px;">Beneficios activos</span>
-          <span class="stat-value" id="totalBenefits" style="font-size: 22px; font-weight: bold;">0</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Sección de Copia de Seguridad -->
-    <section class="backup-section" style="display: flex; gap: 10px; margin-bottom: 20px;">
-      <button id="exportBtn" style="flex: 1; padding: 12px; background: #121216; color: #00ffcc; border: 1px solid #00ffcc44; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 13px;">
-        📥 Guardar Copia
-      </button>
-      <button id="importBtn" style="flex: 1; padding: 12px; background: #121216; color: #ff007f; border: 1px solid #ff007f44; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 13px;">
-        📤 Cargar Copia
-      </button>
-      <input type="file" id="importFile" accept=".json" style="display: none;">
-    </section>
-
-    <!-- SECCIÓN CLIENTES -->
-    <div style="margin-bottom: 10px;">
-      <span style="color: #00d2ff; font-size: 11px; font-weight: bold; letter-spacing: 1.5px;">CLIENTES</span>
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; margin-bottom: 15px;">
-        <h2 style="margin: 0; font-size: 22px;">Mis clientes</h2>
-        <button id="addClientBtn" style="padding: 10px 16px; background: linear-gradient(90deg, #6a11cb, #2575fc); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 13px;">+ Agregar cliente</button>
-      </div>
-    </div>
-
-    <!-- Buscador -->
-    <section class="search-section" style="margin-bottom: 15px;">
-      <input type="text" id="searchInput" placeholder="🔎 Buscar cliente por nombre..." class="search-input" style="width: 100%; padding: 14px; background: #121216; border: 1px solid #22222a; border-radius: 12px; color: white; box-sizing: border-box; font-size: 14px;">
-    </section>
-
-    <!-- Lista de Clientes -->
-    <section class="clients-section">
-      <div id="clientsList" class="clients-list"></div>
-    </section>
-
-  </main>
-
-  <!-- Modal: Agregar Cliente -->
-  <div id="clientModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Registrar Cliente</h2>
-        <span id="closeClientModal" class="close-btn">&times;</span>
-      </div>
-      <form id="clientForm">
-        <div class="form-group">
-          <label for="clientName">Nombre completo</label>
-          <input type="text" id="clientName" placeholder="Ej: Carlos Pérez" required>
-        </div>
-        <div class="form-group">
-          <label for="clientPhone">Teléfono (opcional)</label>
-          <input type="tel" id="clientPhone" placeholder="Ej: 3001234567">
-        </div>
-        <button type="submit" class="btn-primary full-width" style="background: linear-gradient(90deg, #6a11cb, #2575fc); border: none;">Guardar Cliente</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal: Detalles del Cliente -->
-  <div id="detailsModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Detalle del Cliente</h2>
-        <span id="closeDetailsModal" class="close-btn">&times;</span>
-      </div>
-      <div class="modal-body">
+    <main class="container">
         
-        <div class="client-detail-header">
-          <div id="detailAvatar" class="client-avatar-large">C</div>
-          <div>
-            <h3 id="detailName">Cargando...</h3>
-            <p id="detailPhone" class="detail-phone">📱 Sin teléfono</p>
-          </div>
-        </div>
+        <!-- Sección Bienvenida & Dashboard -->
+        <section class="dashboard-welcome">
+            <span class="section-tag">DASHBOARD</span>
+            <h2 class="welcome-text">Bienvenido, Natanael 👋</h2>
+            <p class="welcome-subtext">Administra fácilmente los cortes y beneficios de tus clientes.</p>
+        </section>
 
-        <div class="progress-container">
-          <div class="progress-labels">
-            <span>Progreso de cortes</span>
-            <span><strong id="detailCuts">0</strong> / 15 cortes</span>
-          </div>
-          <div class="progress-bar">
-            <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
-          </div>
-          <p id="progressText" class="progress-info">Cargando información...</p>
-        </div>
+        <!-- Tarjetas de Estadísticas -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon-box">👥</div>
+                <div class="stat-text-box">
+                    <span class="stat-label">Clientes</span>
+                    <span class="stat-value" id="totalClients">0</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon-box">✂️</div>
+                <div class="stat-text-box">
+                    <span class="stat-label">Cortes registrados</span>
+                    <span class="stat-value" id="totalCuts">0</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon-box">🎁</div>
+                <div class="stat-text-box">
+                    <span class="stat-label">Beneficios activos</span>
+                    <span class="stat-value" id="totalBenefits">0</span>
+                </div>
+            </div>
+        </section>
 
-        <div id="benefitBox" class="benefit-box no-benefit">
-          <h4 id="benefitTitle">✂️ Corte normal</h4>
-          <p id="benefitDescription">Este corte tiene precio normal.</p>
-        </div>
+        <!-- Sección Copia de Seguridad -->
+        <section class="backup-section">
+            <span class="section-tag">RESPALDO</span>
+            <div class="backup-buttons">
+                <button id="exportBtn" class="btn-backup btn-export">📥 Guardar Copia</button>
+                <button id="importBtn" class="btn-backup btn-import">📤 Cargar Copia</button>
+            </div>
+            <input type="file" id="importFile" accept=".json" style="display: none;">
+        </section>
 
-        <div class="action-buttons">
-          <button id="registerCutBtn" class="btn-primary full-width" style="background: linear-gradient(90deg, #6a11cb, #2575fc); border: none;">✂️ Registrar Nuevo Corte</button>
-          <button id="useBenefitBtn" class="btn-benefit full-width" style="display: none;">🎁 Aplicar Beneficio</button>
-          <button id="deleteClientBtn" class="btn-danger full-width">🗑 Eliminar Cliente</button>
-        </div>
+        <!-- Sección Clientes (Buscador & Lista) -->
+        <section class="clients-main-section">
+            <span class="section-tag">CLIENTES</span>
+            <div class="clients-header-actions">
+                <h2 class="welcome-text">Mis clientes</h2>
+                <button id="addClientBtn" class="btn-add-client">+ Agregar cliente</button>
+            </div>
+            
+            <input type="text" id="searchInput" placeholder="🔎 Buscar cliente por nombre..." class="search-input">
+            
+            <div id="clientsList" class="clients-list"></div>
+        </section>
 
-      </div>
-    </div>
-  </div>
+    </main>
 
-  <!-- Notificación Toast -->
-  <div id="notification" class="notification">
-    <span id="notificationText">Notificación</span>
-  </div>
-
-  <!-- Scripts -->
-  <script src="script.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service Worker registrado'))
-          .catch(err => console.log('Error SW:', err));
-      });
-    }
-  </script>
-</body>
-</html>
+    <!-- Modal: Agregar Cliente -->
+    <div
