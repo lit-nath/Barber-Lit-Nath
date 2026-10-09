@@ -114,4 +114,41 @@
             <span><strong id="detailCuts">0</strong> / 15 cortes</span>
           </div>
           <div class="progress-bar">
-            <div id="progressFill" class="progress-fill" style="width:
+            <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
+          </div>
+          <p id="progressText" class="progress-info">Cargando información...</p>
+        </div>
+
+        <div id="benefitBox" class="benefit-box no-benefit">
+          <h4 id="benefitTitle">✂️ Corte normal</h4>
+          <p id="benefitDescription">Este corte tiene precio normal.</p>
+        </div>
+
+        <div class="action-buttons">
+          <button id="registerCutBtn" class="btn-primary full-width">✂️ Registrar Nuevo Corte</button>
+          <button id="useBenefitBtn" class="btn-benefit full-width" style="display: none;">🎁 Aplicar Beneficio</button>
+          <button id="deleteClientBtn" class="btn-danger full-width">🗑 Eliminar Cliente</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Notificación Toast -->
+  <div id="notification" class="notification">
+    <span id="notificationText">Notificación</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker registrado con éxito'))
+          .catch(err => console.log('Error al registrar Service Worker:', err));
+      });
+    }
+  </script>
+</body>
+</html>
