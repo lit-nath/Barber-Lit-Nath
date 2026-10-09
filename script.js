@@ -1,12 +1,7 @@
-let clients = JSON.parse(
-    localStorage.getItem("barberLitNathClients")
-) || [];
-
+let clients = JSON.parse(localStorage.getItem("barberLitNathClients")) || [];
 let selectedClientId = null;
 
-
 // ELEMENTOS
-
 const addClientBtn = document.getElementById("addClientBtn");
 const clientModal = document.getElementById("clientModal");
 const detailsModal = document.getElementById("detailsModal");
@@ -41,503 +36,291 @@ const deleteClientBtn = document.getElementById("deleteClientBtn");
 const notification = document.getElementById("notification");
 const notificationText = document.getElementById("notificationText");
 
-// COPIA DE SEGURIDAD
 const exportBtn = document.getElementById("exportBtn");
 const importBtn = document.getElementById("importBtn");
 const importFile = document.getElementById("importFile");
 
-
-// GUARDAR
-
 function saveClients() {
-    localStorage.setItem(
-        "barberLitNathClients",
-        JSON.stringify(clients)
-    );
+  localStorage.setItem("barberLitNathClients", JSON.stringify(clients));
 }
-
-
-// ID
 
 function generateId() {
-    return Date.now().toString();
+  return Date.now().toString();
 }
-
-
-// BENEFICIO
 
 function getBenefit(client) {
-    if (client.cuts === 5 && client.discount5Used !== true) {
-        return "discount20";
-    }
-    if (client.cuts === 10 && client.discount10Used !== true) {
-        return "discount50";
-    }
-    if (client.cuts === 15) {
-        return "free";
-    }
-    return null;
+  if (client.cuts === 5 && client.discount5Used !== true) return "discount20";
+  if (client.cuts === 10 && client.discount10Used !== true) return "discount50";
+  if (client.cuts === 15) return "free";
+  return null;
 }
-
-
-// TEXTO BENEFICIO
-
-function getBenefitText(client) {
-    const benefit = getBenefit(client);
-    if (benefit === "discount20") return "💸 20% de descuento";
-    if (benefit === "discount50") return "💸 50% de descuento";
-    if (benefit === "free") return "🎁 Corte gratis";
-    return "";
-}
-
-
-// NOTIFICACIÓN
 
 function showNotification(message) {
-    notificationText.textContent = message;
-    notification.classList.add("show");
-    setTimeout(function () {
-        notification.classList.remove("show");
-    }, 2500);
+  notificationText.textContent = message;
+  notification.classList.add("show");
+  setTimeout(() => notification.classList.remove("show"), 2500);
 }
-
-
-// ESTADÍSTICAS
 
 function updateStats() {
-    totalClients.textContent = clients.length;
-    let cuts = 0;
-    let benefits = 0;
+  totalClients.textContent = clients.length;
+  let cuts = 0;
+  let benefits = 0;
 
-    clients.forEach(function (client) {
-        cuts += client.cuts;
-        if (getBenefit(client) !== null) {
-            benefits++;
-        }
-    });
+  clients.forEach((client) => {
+    cuts += client.cuts;
+    if (getBenefit(client) !== null) benefits++;
+  });
 
-    totalCuts.textContent = cuts;
-    totalBenefits.textContent = benefits;
+  totalCuts.textContent = cuts;
+  totalBenefits.textContent = benefits;
 }
 
+// MOSTRAR CLIENTES (DISEÑO EXACTO A LA FOTO ORIGINAL)
+function renderClients(search = "") {
+  clientsList.innerHTML = "";
+  const searchText = search.toLowerCase().trim();
 
-// MOSTRAR CLIENTES
+  const filteredClients = clients.filter((client) =>
+    client.name.toLowerCase().includes(searchText)
+  );
 
-function renderClients(search) {
-    if (search === undefined) search = "";
-    clientsList.innerHTML = "";
-    const searchText = search.toLowerCase().trim();
-
-    const filteredClients = clients.filter(function (client) {
-        return client.name.toLowerCase().includes(searchText);
-    });
-
-    if (filteredClients.length === 0) {
-        const emptyMessage = document.createElement("div");
-        emptyMessage.className = "empty-message";
-
-        const icon = document.createElement("div");
-        icon.className = "empty-icon";
-        icon.textContent = "🔎";
-
-        const title = document.createElement("h3");
-        if (clients.length === 0) {
-            title.textContent = "No tienes clientes registrados";
-        } else {
-            title.textContent = "Cliente no encontrado";
-        }
-
-        const description = document.createElement("p");
-        if (clients.length === 0) {
-            description.textContent = "Agrega tu primer cliente para comenzar.";
-        } else {
-            description.textContent = "Intenta buscar con otro nombre.";
-        }
-
-        emptyMessage.appendChild(icon);
-        emptyMessage.appendChild(title);
-        emptyMessage.appendChild(description);
-        clientsList.appendChild(emptyMessage);
-
-        updateStats();
-        return;
-    }
-
-    filteredClients.forEach(function (client) {
-        const card = document.createElement("div");
-        card.className = "client-card";
-
-        const clientInfo = document.createElement("div");
-        clientInfo.className = "client-info";
-
-        const avatar = document.createElement("div");
-        avatar.className = "client-avatar-small";
-        avatar.textContent = client.name.charAt(0).toUpperCase();
-
-        const clientText = document.createElement("div");
-        clientText.className = "client-text";
-
-        const name = document.createElement("h3");
-        name.textContent = client.name;
-
-        const phone = document.createElement("p");
-        if (client.phone) {
-            phone.textContent = "📱 " + client.phone;
-        } else {
-            phone.textContent = "📱 Sin teléfono";
-        }
-
-        const cuts = document.createElement("p");
-        cuts.className = "client-cuts";
-        cuts.textContent = "✂️ " + client.cuts + " cortes";
-
-        const benefit = getBenefitText(client);
-
-        clientText.appendChild(name);
-        clientText.appendChild(phone);
-        clientText.appendChild(cuts);
-
-        if (benefit !== "") {
-            const benefitElement = document.createElement("p");
-            benefitElement.className = "client-benefit";
-            benefitElement.textContent = benefit;
-            clientText.appendChild(benefitElement);
-        }
-
-        clientInfo.appendChild(avatar);
-        clientInfo.appendChild(clientText);
-
-        const viewButton = document.createElement("button");
-        viewButton.className = "view-button";
-        viewButton.textContent = "Ver cliente";
-
-        viewButton.addEventListener("click", function () {
-            openClientDetails(client.id);
-        });
-
-        card.appendChild(clientInfo);
-        card.appendChild(viewButton);
-        clientsList.appendChild(card);
-    });
-
+  if (filteredClients.length === 0) {
+    clientsList.innerHTML = `
+      <div style="text-align: center; padding: 30px 20px; background: #0d0d12; border-radius: 18px; border: 1px dashed #1e1e28;">
+        <div style="font-size: 32px; margin-bottom: 8px;">🔎</div>
+        <h3 style="font-size: 15px; margin-bottom: 4px; color: #fff;">No hay clientes</h3>
+        <p style="font-size: 12px; color: #8e8e93;">Agrega un cliente para comenzar.</p>
+      </div>
+    `;
     updateStats();
+    return;
+  }
+
+  filteredClients.forEach((client) => {
+    const card = document.createElement("div");
+    card.className = "client-card";
+    card.style.cssText = "background: #0d0d12; border: 1px solid #1e1e28; border-radius: 18px; padding: 16px; margin-bottom: 12px;";
+
+    // Header de la tarjeta (Avatar + Info)
+    const header = document.createElement("div");
+    header.style.cssText = "display: flex; align-items: center; gap: 14px; margin-bottom: 14px;";
+
+    // Avatar en círculo degradado
+    const avatar = document.createElement("div");
+    avatar.style.cssText = "width: 48px; height: 48px; background: linear-gradient(135deg, #4f46e5, #2575fc); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: #ffffff; flex-shrink: 0;";
+    avatar.textContent = client.name.charAt(0).toUpperCase();
+
+    // Información del cliente
+    const info = document.createElement("div");
+    info.style.cssText = "display: flex; flex-direction: column; gap: 2px;";
+
+    const name = document.createElement("h3");
+    name.style.cssText = "font-size: 16px; font-weight: 700; color: #ffffff; margin: 0;";
+    name.textContent = client.name;
+
+    const phone = document.createElement("p");
+    phone.style.cssText = "font-size: 13px; color: #8e8e93; margin: 0;";
+    phone.textContent = client.phone ? "📱 " + client.phone : "📱 Sin teléfono";
+
+    const cuts = document.createElement("p");
+    cuts.style.cssText = "font-size: 13px; color: #00d2ff; font-weight: 600; margin: 2px 0 0 0;";
+    cuts.textContent = "✂️ " + client.cuts + " cortes";
+
+    info.appendChild(name);
+    info.appendChild(phone);
+    info.appendChild(cuts);
+
+    header.appendChild(avatar);
+    header.appendChild(info);
+
+    // Botón Ver Cliente grande con borde azul
+    const viewBtn = document.createElement("button");
+    viewBtn.style.cssText = "width: 100%; padding: 12px; background: transparent; border: 1px solid #2575fc; color: #00d2ff; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer;";
+    viewBtn.textContent = "Ver cliente";
+    viewBtn.addEventListener("click", () => openClientDetails(client.id));
+
+    card.appendChild(header);
+    card.appendChild(viewBtn);
+    clientsList.appendChild(card);
+  });
+
+  updateStats();
 }
 
-
-// ABRIR AGREGAR CLIENTE
-
-addClientBtn.addEventListener("click", function () {
-    clientModal.classList.add("active");
-    document.getElementById("clientName").focus();
+addClientBtn.addEventListener("click", () => {
+  clientModal.classList.add("active");
+  document.getElementById("clientName").focus();
 });
 
+closeClientModal.addEventListener("click", () => clientModal.classList.remove("active"));
+closeDetailsModal.addEventListener("click", () => detailsModal.classList.remove("active"));
 
-// CERRAR AGREGAR CLIENTE
+clientForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = document.getElementById("clientName").value.trim();
+  const phone = document.getElementById("clientPhone").value.trim();
 
-closeClientModal.addEventListener("click", function () {
-    clientModal.classList.remove("active");
+  if (!name) return;
+
+  const newClient = {
+    id: generateId(),
+    name: name,
+    phone: phone,
+    cuts: 0,
+    discount5Used: false,
+    discount10Used: false
+  };
+
+  clients.push(newClient);
+  saveClients();
+  renderClients();
+  clientForm.reset();
+  clientModal.classList.remove("active");
+  showNotification("✅ Cliente registrado correctamente");
 });
-
-
-// REGISTRAR CLIENTE
-
-clientForm.addEventListener("submit", function (event) {
-    event.preventDefault();
-    const name = document.getElementById("clientName").value.trim();
-    const phone = document.getElementById("clientPhone").value.trim();
-
-    if (name === "") {
-        alert("Escribe el nombre del cliente.");
-        return;
-    }
-
-    const newClient = {
-        id: generateId(),
-        name: name,
-        phone: phone,
-        cuts: 0,
-        discount5Used: false,
-        discount10Used: false
-    };
-
-    clients.push(newClient);
-    saveClients();
-    renderClients();
-    clientForm.reset();
-    clientModal.classList.remove("active");
-    showNotification("✅ Cliente registrado correctamente");
-});
-
-
-// ABRIR DETALLES
 
 function openClientDetails(id) {
-    const client = clients.find(function (item) {
-        return item.id === id;
-    });
+  const client = clients.find((item) => item.id === id);
+  if (!client) return;
 
-    if (!client) return;
-
-    selectedClientId = id;
-    updateClientDetails(client);
-    detailsModal.classList.add("active");
+  selectedClientId = id;
+  updateClientDetails(client);
+  detailsModal.classList.add("active");
 }
-
-
-// ACTUALIZAR DETALLES
 
 function updateClientDetails(client) {
-    detailName.textContent = client.name;
+  detailName.textContent = client.name;
+  detailPhone.textContent = client.phone ? "📱 " + client.phone : "📱 Sin teléfono";
+  detailCuts.textContent = client.cuts;
+  detailAvatar.textContent = client.name.charAt(0).toUpperCase();
 
-    if (client.phone) {
-        detailPhone.textContent = "📱 " + client.phone;
-    } else {
-        detailPhone.textContent = "📱 Sin teléfono";
-    }
+  let progress = (client.cuts / 15) * 100;
+  if (progress > 100) progress = 100;
+  progressFill.style.width = progress + "%";
 
-    detailCuts.textContent = client.cuts;
-    detailAvatar.textContent = client.name.charAt(0).toUpperCase();
+  if (client.cuts === 0) {
+    progressText.textContent = "Empieza registrando el primer corte.";
+  } else if (client.cuts < 5) {
+    progressText.textContent = "Corte " + client.cuts + " registrado. Falta(n) " + (5 - client.cuts) + " para el 20% de descuento.";
+  } else if (client.cuts === 5) {
+    progressText.textContent = client.discount5Used ? "Descuento del 20% utilizado." : "💸 Corte 5: 20% de descuento disponible.";
+  } else if (client.cuts < 10) {
+    progressText.textContent = "Corte " + client.cuts + " registrado. Falta(n) " + (10 - client.cuts) + " para el 50% de descuento.";
+  } else if (client.cuts === 10) {
+    progressText.textContent = client.discount10Used ? "Descuento del 50% utilizado." : "💸 Corte 10: 50% de descuento disponible.";
+  } else if (client.cuts < 15) {
+    progressText.textContent = "Corte " + client.cuts + " registrado. Falta(n) " + (15 - client.cuts) + " para el corte GRATIS.";
+  } else if (client.cuts === 15) {
+    progressText.textContent = "🎁 Corte 15: COMPLETAMENTE GRATIS.";
+  }
 
-    let progress = (client.cuts / 15) * 100;
-    if (progress > 100) progress = 100;
+  const benefit = getBenefit(client);
 
-    progressFill.style.width = progress + "%";
-
-    if (client.cuts === 0) {
-        progressText.textContent = "Empieza registrando el primer corte.";
-    } else if (client.cuts < 5) {
-        const remaining = 5 - client.cuts;
-        progressText.textContent = "Corte " + client.cuts + " registrado. Falta(n) " + remaining + " para el 20% de descuento.";
-    } else if (client.cuts === 5) {
-        if (client.discount5Used === true) {
-            progressText.textContent = "Descuento de 20% utilizado. Próximos cortes normales.";
-        } else {
-            progressText.textContent = "💸 Corte 5: 20% de descuento disponible.";
-        }
-    } else if (client.cuts < 10) {
-        const remaining = 10 - client.cuts;
-        progressText.textContent = "Corte " + client.cuts + " registrado. Falta(n) " + remaining + " para el 50% de descuento.";
-    } else if (client.cuts === 10) {
-        if (client.discount10Used === true) {
-            progressText.textContent = "Descuento de 50% utilizado. Próximos cortes normales.";
-        } else {
-            progressText.textContent = "💸 Corte 10: 50% de descuento disponible.";
-        }
-    } else if (client.cuts < 15) {
-        const remaining = 15 - client.cuts;
-        progressText.textContent = "Corte " + client.cuts + " registrado. Falta(n) " + remaining + " para el corte GRATIS.";
-    } else if (client.cuts === 15) {
-        progressText.textContent = "🎁 Corte 15: COMPLETAMENTE GRATIS.";
-    }
-
-    const benefit = getBenefit(client);
-
-    if (benefit === "discount20") {
-        benefitBox.className = "benefit-box available";
-        benefitTitle.textContent = "💸 20% de descuento";
-        benefitDescription.textContent = "El corte número 5 tiene 20% de descuento.";
-        useBenefitBtn.style.display = "block";
-        registerCutBtn.style.display = "block";
-    } else if (benefit === "discount50") {
-        benefitBox.className = "benefit-box available";
-        benefitTitle.textContent = "💸 50% de descuento";
-        benefitDescription.textContent = "El corte número 10 tiene 50% de descuento.";
-        useBenefitBtn.style.display = "block";
-        registerCutBtn.style.display = "block";
-    } else if (benefit === "free") {
-        benefitBox.className = "benefit-box available";
-        benefitTitle.textContent = "🎁 Corte gratis";
-        benefitDescription.textContent = "El corte número 15 es completamente gratis.";
-        useBenefitBtn.style.display = "block";
-        registerCutBtn.style.display = "none";
-    } else {
-        benefitBox.className = "benefit-box no-benefit";
-        benefitTitle.textContent = "✂️ Corte normal";
-        benefitDescription.textContent = "Este corte tiene precio normal.";
-        useBenefitBtn.style.display = "none";
-        registerCutBtn.style.display = "block";
-    }
+  if (benefit === "discount20") {
+    benefitTitle.textContent = "💸 20% de descuento";
+    benefitDescription.textContent = "El corte número 5 tiene 20% de descuento.";
+    useBenefitBtn.style.display = "block";
+  } else if (benefit === "discount50") {
+    benefitTitle.textContent = "💸 50% de descuento";
+    benefitDescription.textContent = "El corte número 10 tiene 50% de descuento.";
+    useBenefitBtn.style.display = "block";
+  } else if (benefit === "free") {
+    benefitTitle.textContent = "🎁 Corte gratis";
+    benefitDescription.textContent = "El corte número 15 es completamente gratis.";
+    useBenefitBtn.style.display = "block";
+  } else {
+    benefitTitle.textContent = "✂️ Corte normal";
+    benefitDescription.textContent = "Este corte tiene precio normal.";
+    useBenefitBtn.style.display = "none";
+  }
 }
 
+registerCutBtn.addEventListener("click", () => {
+  const client = clients.find((item) => item.id === selectedClientId);
+  if (!client) return;
 
-// REGISTRAR CORTE
+  if (client.cuts >= 15) {
+    showNotification("⚠️ Primero debes utilizar el corte gratis.");
+    return;
+  }
 
-registerCutBtn.addEventListener("click", function () {
-    const client = clients.find(function (item) {
-        return item.id === selectedClientId;
-    });
-
-    if (!client) return;
-
-    if (client.cuts >= 15) {
-        showNotification("⚠️ Primero debes utilizar el corte gratis.");
-        return;
-    }
-
-    client.cuts = client.cuts + 1;
-    saveClients();
-    renderClients(searchInput.value);
-    updateClientDetails(client);
-
-    if (client.cuts === 5) {
-        showNotification("💸 ¡Corte 5! Tiene 20% de descuento.");
-    } else if (client.cuts === 10) {
-        showNotification("💸 ¡Corte 10! Tiene 50% de descuento.");
-    } else if (client.cuts === 15) {
-        showNotification("🎁 ¡Corte 15! Es completamente GRATIS.");
-    } else {
-        showNotification("✂️ Corte registrado. Precio normal.");
-    }
+  client.cuts += 1;
+  saveClients();
+  renderClients(searchInput.value);
+  updateClientDetails(client);
+  showNotification("✂️ Corte registrado.");
 });
 
+useBenefitBtn.addEventListener("click", () => {
+  const client = clients.find((item) => item.id === selectedClientId);
+  if (!client) return;
 
-// USAR BENEFICIO
+  const benefit = getBenefit(client);
 
-useBenefitBtn.addEventListener("click", function () {
-    const client = clients.find(function (item) {
-        return item.id === selectedClientId;
-    });
+  if (benefit === "discount20") {
+    client.discount5Used = true;
+  } else if (benefit === "discount50") {
+    client.discount10Used = true;
+  } else if (benefit === "free") {
+    client.cuts = 0;
+    client.discount5Used = false;
+    client.discount10Used = false;
+  }
 
-    if (!client) return;
-
-    const benefit = getBenefit(client);
-
-    if (benefit === "discount20") {
-        client.discount5Used = true;
-        saveClients();
-        renderClients(searchInput.value);
-        updateClientDetails(client);
-        showNotification("💸 20% de descuento aplicado.");
-        return;
-    }
-
-    if (benefit === "discount50") {
-        client.discount10Used = true;
-        saveClients();
-        renderClients(searchInput.value);
-        updateClientDetails(client);
-        showNotification("💸 50% de descuento aplicado.");
-        return;
-    }
-
-    if (benefit === "free") {
-        client.cuts = 0;
-        client.discount5Used = false;
-        client.discount10Used = false;
-        saveClients();
-        renderClients(searchInput.value);
-        updateClientDetails(client);
-        showNotification("🎁 Corte gratis utilizado. ¡Nuevo ciclo!");
-    }
+  saveClients();
+  renderClients(searchInput.value);
+  updateClientDetails(client);
+  showNotification("🎁 Beneficio aplicado.");
 });
 
+deleteClientBtn.addEventListener("click", () => {
+  const client = clients.find((item) => item.id === selectedClientId);
+  if (!client) return;
 
-// ELIMINAR CLIENTE
-
-deleteClientBtn.addEventListener("click", function () {
-    const client = clients.find(function (item) {
-        return item.id === selectedClientId;
-    });
-
-    if (!client) return;
-
-    const confirmation = confirm("¿Seguro que quieres eliminar a " + client.name + "?");
-    if (!confirmation) return;
-
-    clients = clients.filter(function (item) {
-        return item.id !== selectedClientId;
-    });
-
+  if (confirm("¿Eliminar a " + client.name + "?")) {
+    clients = clients.filter((item) => item.id !== selectedClientId);
     saveClients();
     renderClients(searchInput.value);
     detailsModal.classList.remove("active");
     showNotification("🗑 Cliente eliminado");
+  }
 });
 
-
-// BUSCADOR
-
-searchInput.addEventListener("input", function () {
-    renderClients(searchInput.value);
-});
-
-
-// CERRAR MODALES
-
-closeDetailsModal.addEventListener("click", function () {
-    detailsModal.classList.remove("active");
-});
-
-clientModal.addEventListener("click", function (event) {
-    if (event.target === clientModal) {
-        clientModal.classList.remove("active");
-    }
-});
-
-detailsModal.addEventListener("click", function (event) {
-    if (event.target === detailsModal) {
-        detailsModal.classList.remove("active");
-    }
-});
-
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-        clientModal.classList.remove("active");
-        detailsModal.classList.remove("active");
-    }
-});
-
-
-// FUNCIONES DE COPIA DE SEGURIDAD
+searchInput.addEventListener("input", () => renderClients(searchInput.value));
 
 if (exportBtn) {
-  exportBtn.addEventListener("click", function () {
-    if (clients.length === 0) {
-      alert("No tienes clientes para guardar en la copia de seguridad.");
-      return;
-    }
+  exportBtn.addEventListener("click", () => {
+    if (clients.length === 0) return alert("No hay clientes para guardar.");
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(clients));
-    const downloadAnchor = document.createElement("a");
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", "barber_lit_nath_backup.json");
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
-    showNotification("📥 Copia de seguridad guardada con éxito");
+    const a = document.createElement("a");
+    a.href = dataStr;
+    a.download = "barber_lit_nath_backup.json";
+    a.click();
+    showNotification("📥 Copia guardada");
   });
 }
 
 if (importBtn && importFile) {
-  importBtn.addEventListener("click", function () {
-    importFile.click();
-  });
-
-  importFile.addEventListener("change", function (event) {
-    const file = event.target.files[0];
+  importBtn.addEventListener("click", () => importFile.click());
+  importFile.addEventListener("change", (e) => {
+    const file = e.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = (event) => {
       try {
-        const importedClients = JSON.parse(e.target.result);
-        if (Array.isArray(importedClients)) {
-          clients = importedClients;
+        const imported = JSON.parse(event.target.result);
+        if (Array.isArray(imported)) {
+          clients = imported;
           saveClients();
           renderClients();
-          showNotification("📤 Clientes restaurados correctamente");
-        } else {
-          alert("El archivo no tiene el formato correcto.");
+          showNotification("📤 Clientes restaurados");
         }
       } catch (err) {
-        alert("Error al leer el archivo de copia de seguridad.");
+        alert("Archivo inválido.");
       }
     };
     reader.readAsText(file);
   });
 }
 
-
-// INICIAR
-
 renderClients();
-updateStats();
