@@ -1150,3 +1150,57 @@ document.addEventListener(
 renderClients();
 
 updateStats();
+
+// BOTONES DE RESPALDO / COPIA DE SEGURIDAD
+
+const exportBtn = document.getElementById("exportBtn");
+const importBtn = document.getElementById("importBtn");
+const importFile = document.getElementById("importFile");
+
+// 1. DESCARGAR / EXPORTAR COPIA
+if (exportBtn) {
+  exportBtn.addEventListener("click", function () {
+    if (clients.length === 0) {
+      alert("No tienes clientes para guardar en la copia de seguridad.");
+      return;
+    }
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(clients));
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", "barber_lit_nath_backup.json");
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+    showNotification("📥 Copia de seguridad guardada con éxito");
+  });
+}
+
+// 2. SELECCIONAR ARCHIVO Y RESTAURAR / IMPORTAR
+if (importBtn && importFile) {
+  importBtn.addEventListener("click", function () {
+    importFile.click();
+  });
+
+  importFile.addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        const importedClients = JSON.parse(e.target.result);
+        if (Array.isArray(importedClients)) {
+          clients = importedClients;
+          saveClients();
+          renderClients();
+          showNotification("📤 Clientes restaurados correctamente");
+        } else {
+          alert("El archivo no tiene el formato correcto.");
+        }
+      } catch (err) {
+        alert("Error al leer el archivo de copia de seguridad.");
+      }
+    };
+    reader.readAsText(file);
+  });
+}
