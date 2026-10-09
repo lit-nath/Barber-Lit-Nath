@@ -1,4 +1,4 @@
-const CACHE_NAME = 'barber-lit-nath-v1';
+const CACHE_NAME = 'barber-lit-nath-v2';
 const ASSETS = [
   './',
   './index.html',
