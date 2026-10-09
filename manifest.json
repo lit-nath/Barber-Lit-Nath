@@ -1,0 +1,21 @@
+{
+  "name": "Barber Lit Nath",
+  "short_name": "Lit Nath",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1065/1065679.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1065/1065679.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

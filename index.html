@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Barber Lit Nath</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Configuración para iPhone / PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Lit Nath">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1065/1065679.png">
+    <meta name="theme-color" content="#050505">
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo-area">
+
+            <div class="logo-icon">
+                ✂️
+            </div>
+
+            <div>
+                <h1>Barber Lit Nath</h1>
+                <p>Sistema de fidelización</p>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section class="dashboard">
+
+            <div class="welcome">
+
+                <p class="small-title">
+                    DASHBOARD
+                </p>
+
+                <h2>
+                    Bienvenido, Natanael 👋
+                </h2>
+
+                <p>
+                    Administra fácilmente los cortes y beneficios de tus clientes.
+                </p>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        👥
+                    </div>
+
+                    <div>
+                        <p>Clientes</p>
+                        <strong id="totalClients">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        ✂️
+                    </div>
+
+                    <div>
+                        <p>Cortes registrados</p>
+                        <strong id="totalCuts">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        🎁
+                    </div>
+
+                    <div>
+                        <p>Beneficios activos</p>
+                        <strong id="totalBenefits">0</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <section class="clients-section">
+
+                <div class="section-header">
+
+                    <div>
+                        <p class="small-title">
+                            CLIENTES
+                        </p>
+
+                        <h2>
+                            Mis clientes
+                        </h2>
+                    </div>
+
+                    <button
+                        id="addClientBtn"
+                        class="primary-button">
+
+                        ＋ Agregar cliente
+
+                    </button>
+
+                </div>
+
+
+                <div class="search-box">
+
+                    <span>🔎</span>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Buscar cliente por nombre..."
+                    >
+
+                </div>
+
+
+                <div id="clientsList">
+
+                    <div class="empty-message">
+
+                        <div class="empty-icon">
+                            ✂️
+                        </div>
+
+                        <h3>
+                            No tienes clientes registrados
+                        </h3>
+
+                        <p>
+                            Agrega tu primer cliente para comenzar.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <!-- MODAL NUEVO CLIENTE -->
+
+    <div
+        id="clientModal"
+        class="modal">
+
+        <div class="modal-content">
+
+            <button
+                class="close-modal"
+                id="closeClientModal">
+
+                ×
+
+            </button>
+
+
+            <div class="modal-icon">
+                👤
+            </div>
+
+
+            <h2>
+                Nuevo cliente
+            </h2>
+
+
+            <p class="modal-description">
+                Registra los datos de tu cliente.
+            </p>
+
+
+            <form id="clientForm">
+
+                <label for="clientName">
+                    Nombre
+                </label>
+
+                <input
+                    type="text"
+                    id="clientName"
+                    placeholder="Ej: Natanael Torres"
+                    required
+                >
+
+
+                <label for="clientPhone">
+                    Teléfono
+                </label>
+
+                <input
+                    type="tel"
+                    id="clientPhone"
+                    placeholder="Ej: 305*******"
+                >
+
+
+                <button
+                    type="submit"
+                    class="primary-button full-button">
+
+                    Registrar cliente
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- MODAL DETALLES -->
+
+    <div
+        id="detailsModal"
+        class="modal">
+
+        <div class="modal-content details-content">
+
+            <button
+                class="close-modal"
+                id="closeDetailsModal">
+
+                ×
+
+            </button>
+
+
+            <div
+                class="client-avatar"
+                id="detailAvatar">
+
+                J
+
+            </div>
+
+
+            <h2 id="detailName">
+                Cliente
+            </h2>
+
+
+            <p
+                class="detail-phone"
+                id="detailPhone">
+
+                📱 Sin teléfono
+
+            </p>
+
+
+            <div class="cuts-container">
+
+                <p class="small-title">
+                    FIDELIZACIÓN
+                </p>
+
+
+                <div class="cuts-number">
+
+                    <strong id="detailCuts">
+                        0
+                    </strong>
+
+                    <span>
+                        cortes
+                    </span>
+
+                </div>
+
+
+                <div class="progress-bar">
+
+                    <div
+                        id="progressFill"
+                        class="progress-fill">
+                    </div>
+
+                </div>
+
+
+                <p
+                    id="progressText"
+                    class="progress-text">
+
+                    Empieza registrando el primer corte.
+
+                </p>
+
+            </div>
+
+
+            <div
+                id="benefitBox"
+                class="benefit-box no-benefit">
+
+                <div class="benefit-icon">
+                    ✂️
+                </div>
+
+                <div>
+
+                    <strong id="benefitTitle">
+                        Corte normal
+                    </strong>
+
+                    <p id="benefitDescription">
+                        Este corte tiene precio normal.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-buttons">
+
+                <button
+                    id="registerCutBtn"
+                    class="primary-button full-button">
+
+                    ＋ Registrar corte
+
+                </button>
+
+
+                <button
+                    id="useBenefitBtn"
+                    class="benefit-button full-button">
+
+                    🎁 Usar beneficio
+
+                </button>
+
+
+                <button
+                    id="deleteClientBtn"
+                    class="delete-button full-button">
+
+                    🗑 Eliminar cliente
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NOTIFICACIÓN -->
+
+    <div
+        id="notification"
+        class="notification">
+
+        <span id="notificationText"></span>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+    <!-- Registro del Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrado con éxito', reg))
+                    .catch(err => console.log('Error al registrar Service Worker', err));
+            });
+        }
+    </script>
+
+</body>
+
+</html>
