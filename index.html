@@ -1,96 +1,668 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Barber Lit Nath</title>
-    
-    <!-- PWA Manifest & Icons -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/color-glass/512/barber-clippers.png">
-    <link rel="icon" type="image/png" href="https://img.icons8.com/color-glass/512/barber-clippers.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Barber Lit Nath</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="style.css">
+  <!-- Manifest -->
+  <link rel="manifest" href="manifest.json">
 
-    <!-- iOS Meta Tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0d0a1d">
+  <!-- Íconos iOS -->
+  <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/neon-tint/512/barber-clippers.png">
+  <link rel="icon" type="image/png" href="https://img.icons8.com/neon-tint/512/barber-clippers.png">
+  
+  <meta name="theme-color" content="#050508">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <style>
+    :root {
+      --bg-main: #050508;
+      --bg-card: #0d0d12;
+      --bg-modal: #12121a;
+      --bg-input: #0a0a0f;
+      --accent-blue: #2575fc;
+      --accent-purple: #6a11cb;
+      --neon-blue: #00d2ff;
+      --text-white: #ffffff;
+      --text-muted: #8e8e93;
+      --border-color: #1e1e28;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-white);
+      min-height: 100vh;
+      padding-bottom: 40px;
+    }
+
+    .container {
+      padding: 0 16px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* HEADER */
+    .app-header {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      background: var(--bg-main);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon-box {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #4f46e5, #3b82f6);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .app-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .app-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* DASHBOARD */
+    .dashboard-section {
+      margin-top: 18px;
+    }
+
+    .section-tag {
+      color: var(--neon-blue);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .welcome-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .welcome-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    /* ESTADÍSTICAS */
+    .stats-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: #201a35;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* RESPALDO */
+    .backup-section {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn-backup-export, .btn-backup-import {
+      flex: 1;
+      padding: 12px;
+      background: var(--bg-card);
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .btn-backup-export {
+      color: #00ffcc;
+      border: 1px solid #00ffcc44;
+    }
+
+    .btn-backup-import {
+      color: #ff007f;
+      border: 1px solid #ff007f44;
+    }
+
+    /* CLIENTES SECCIÓN */
+    .clients-section {
+      margin-top: 10px;
+    }
+
+    .clients-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .btn-add-client {
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      color: var(--text-white);
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      color: var(--text-white);
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* LISTA CLIENTES */
+    .clients-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .client-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .client-card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .client-avatar-circle {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #4f46e5, #2575fc);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .client-card-info h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .client-card-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .client-cuts-blue {
+      color: var(--neon-blue) !important;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .btn-outline-blue {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid var(--accent-blue);
+      color: var(--neon-blue);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* MODALES */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-modal);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .close-modal-btn {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      font-size: 22px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .avatar-modal-icon {
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #4f46e5, #2575fc);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--text-white);
+      font-size: 14px;
+    }
+
+    .btn-primary-gradient {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      border: none;
+      border-radius: 12px;
+      color: var(--text-white);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* DETALLE CLIENTE */
+    .text-center {
+      text-align: center;
+    }
+
+    .avatar-large-circle {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #4f46e5, #2575fc);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      margin: 0 auto 12px auto;
+    }
+
+    .detail-client-name {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .detail-client-phone {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .fidelizacion-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .cuts-count-number {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 4px 0 10px 0;
+    }
+
+    .cuts-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .progress-bar-thin {
+      height: 6px;
+      background: #1c1c28;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill-blue {
+      height: 100%;
+      background: linear-gradient(90deg, #6a11cb, #00d2ff);
+      border-radius: 3px;
+    }
+
+    .progress-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .benefit-card-dark {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .benefit-card-icon {
+      font-size: 24px;
+    }
+
+    .benefit-card-text h4 {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .benefit-card-text p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .modal-action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-benefit-gradient {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #ff007f, #7928ca);
+      border: none;
+      border-radius: 12px;
+      color: var(--text-white);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-outline-danger {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      border: 1px solid #ff3b3066;
+      color: #ff3b30;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* NOTIFICACIÓN */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--bg-modal);
+      border: 1px solid var(--accent-purple);
+      padding: 12px 24px;
+      border-radius: 30px;
+      transition: transform 0.3s ease;
+      z-index: 2000;
+      font-size: 13px;
+    }
+
+    .notification.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Encabezado / Header -->
-    <header class="app-header">
-        <div class="logo-container">
-            <div class="logo-icon">✂️</div>
-            <div>
-                <h1 class="app-title">Barber Lit Nath</h1>
-                <p class="app-subtitle">Sistema de fidelización</p>
-            </div>
+  <!-- Encabezado / Header -->
+  <header class="app-header">
+    <div class="logo-container">
+      <div class="logo-icon-box">✂️</div>
+      <div>
+        <h1 class="app-title">Barber Lit Nath</h1>
+        <p class="app-subtitle">Sistema de fidelización</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    
+    <!-- DASHBOARD -->
+    <section class="dashboard-section">
+      <span class="section-tag">DASHBOARD</span>
+      <h2 class="welcome-title">Bienvenido, Natanael 👋</h2>
+      <p class="welcome-subtitle">Administra fácilmente los cortes y beneficios de tus clientes.</p>
+
+      <div class="stats-list">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <span class="stat-label">Clientes</span>
+            <span class="stat-value" id="totalClients">0</span>
+          </div>
         </div>
-    </header>
 
-    <main class="container">
+        <div class="stat-card">
+          <div class="stat-icon">✂️</div>
+          <div class="stat-info">
+            <span class="stat-label">Cortes registrados</span>
+            <span class="stat-value" id="totalCuts">0</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🎁</div>
+          <div class="stat-info">
+            <span class="stat-label">Beneficios activos</span>
+            <span class="stat-value" id="totalBenefits">0</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Botones de Respaldo -->
+    <section class="backup-section">
+      <button id="exportBtn" class="btn-backup-export">📥 Guardar Copia</button>
+      <button id="importBtn" class="btn-backup-import">📤 Cargar Copia</button>
+      <input type="file" id="importFile" accept=".json" style="display: none;">
+    </section>
+
+    <!-- CLIENTES -->
+    <section class="clients-section">
+      <span class="section-tag">CLIENTES</span>
+      <div class="clients-header-row">
+        <h2 class="section-title">Mis clientes</h2>
+        <button id="addClientBtn" class="btn-add-client">+ Agregar cliente</button>
+      </div>
+
+      <input type="text" id="searchInput" placeholder="🔎 Buscar cliente por nombre..." class="search-input">
+
+      <div id="clientsList" class="clients-list"></div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: NUEVO CLIENTE -->
+  <div id="clientModal" class="modal">
+    <div class="modal-content">
+      <span id="closeClientModal" class="close-modal-btn">&times;</span>
+      
+      <div class="avatar-modal-icon">👤</div>
+      <h2 class="modal-title">Nuevo cliente</h2>
+      <p class="modal-subtitle">Registra los datos de tu cliente.</p>
+
+      <form id="clientForm">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" id="clientName" placeholder="Ej: Natanael Torres" required>
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="tel" id="clientPhone" placeholder="Ej: 305*******">
+        </div>
+        <button type="submit" class="btn-primary-gradient">Registrar cliente</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DETALLE CLIENTE -->
+  <div id="detailsModal" class="modal">
+    <div class="modal-content text-center">
+      <span id="closeDetailsModal" class="close-modal-btn">&times;</span>
+      
+      <div id="detailAvatar" class="avatar-large-circle">N</div>
+      <h2 id="detailName" class="detail-client-name">Natanael Torres</h2>
+      <p id="detailPhone" class="detail-client-phone">📱 123</p>
+
+      <div class="fidelizacion-card">
+        <span class="section-tag">FIDELIZACIÓN</span>
+        <div class="cuts-count-number"><span id="detailCuts">0</span> <span class="cuts-label">cortes</span></div>
         
-        <!-- Sección Bienvenida & Dashboard -->
-        <section class="dashboard-welcome">
-            <span class="section-tag">DASHBOARD</span>
-            <h2 class="welcome-text">Bienvenido, Natanael 👋</h2>
-            <p class="welcome-subtext">Administra fácilmente los cortes y beneficios de tus clientes.</p>
-        </section>
+        <div class="progress-bar-thin">
+          <div id="progressFill" class="progress-fill-blue" style="width: 0%;"></div>
+        </div>
+        <p id="progressText" class="progress-hint">Corte 1 registrado. Falta(n) 4 para el 20% de descuento.</p>
+      </div>
 
-        <!-- Tarjetas de Estadísticas -->
-        <section class="stats-section">
-            <div class="stat-card">
-                <div class="stat-icon-box">👥</div>
-                <div class="stat-text-box">
-                    <span class="stat-label">Clientes</span>
-                    <span class="stat-value" id="totalClients">0</span>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon-box">✂️</div>
-                <div class="stat-text-box">
-                    <span class="stat-label">Cortes registrados</span>
-                    <span class="stat-value" id="totalCuts">0</span>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-icon-box">🎁</div>
-                <div class="stat-text-box">
-                    <span class="stat-label">Beneficios activos</span>
-                    <span class="stat-value" id="totalBenefits">0</span>
-                </div>
-            </div>
-        </section>
+      <div id="benefitBox" class="benefit-card-dark">
+        <div class="benefit-card-icon">✂️</div>
+        <div class="benefit-card-text">
+          <h4 id="benefitTitle">✂️ Corte normal</h4>
+          <p id="benefitDescription">Este corte tiene precio normal.</p>
+        </div>
+      </div>
 
-        <!-- Sección Copia de Seguridad -->
-        <section class="backup-section">
-            <span class="section-tag">RESPALDO</span>
-            <div class="backup-buttons">
-                <button id="exportBtn" class="btn-backup btn-export">📥 Guardar Copia</button>
-                <button id="importBtn" class="btn-backup btn-import">📤 Cargar Copia</button>
-            </div>
-            <input type="file" id="importFile" accept=".json" style="display: none;">
-        </section>
+      <div class="modal-action-buttons">
+        <button id="registerCutBtn" class="btn-primary-gradient">+ Registrar corte</button>
+        <button id="useBenefitBtn" class="btn-benefit-gradient" style="display: none;">🎁 Aplicar Beneficio</button>
+        <button id="deleteClientBtn" class="btn-outline-danger">🗑 Eliminar cliente</button>
+      </div>
+    </div>
+  </div>
 
-        <!-- Sección Clientes (Buscador & Lista) -->
-        <section class="clients-main-section">
-            <span class="section-tag">CLIENTES</span>
-            <div class="clients-header-actions">
-                <h2 class="welcome-text">Mis clientes</h2>
-                <button id="addClientBtn" class="btn-add-client">+ Agregar cliente</button>
-            </div>
-            
-            <input type="text" id="searchInput" placeholder="🔎 Buscar cliente por nombre..." class="search-input">
-            
-            <div id="clientsList" class="clients-list"></div>
-        </section>
+  <!-- Notificación -->
+  <div id="notification" class="notification">
+    <span id="notificationText">Notificación</span>
+  </div>
 
-    </main>
-
-    <!-- Modal: Agregar Cliente -->
-    <div
+  <script src="script.js"></script>
+</body>
+</html>
