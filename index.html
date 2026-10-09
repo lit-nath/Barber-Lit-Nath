@@ -1,410 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Barber Lit Nath</title>
 
-    <title>Barber Lit Nath</title>
+  <!-- PWA Manifest & Styles -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
 
-    <link rel="stylesheet" href="style.css">
-
-    <!-- Configuración para iPhone / PWA -->
-    <link rel="manifest" href="manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Lit Nath">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1065/1065679.png">
-    <meta name="theme-color" content="#050505">
+  <!-- Íconos para la app en iPhone -->
+  <link rel="apple-touch-icon" sizes="180x180" href="https://img.icons8.com/neon-tint/512/barber-clippers.png">
+  <link rel="apple-touch-icon" href="https://img.icons8.com/neon-tint/512/barber-clippers.png">
+  <link rel="icon" type="image/png" href="https://img.icons8.com/neon-tint/512/barber-clippers.png">
+  
+  <meta name="theme-color" content="#050505">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
-
 <body>
 
-    <header>
+  <!-- Encabezado / Header -->
+  <header class="app-header">
+    <div class="logo-container">
+      <h1 class="app-title">BARBER <span>LIT NATH</span></h1>
+      <p class="app-subtitle">Programa de Fidelización ✂️</p>
+    </div>
+    <button id="addClientBtn" class="btn-primary">+ Nuevo Cliente</button>
+  </header>
 
-        <div class="logo-area">
+  <main class="container">
+    
+    <!-- Tarjetas de Estadísticas -->
+    <section class="stats-section">
+      <div class="stat-card">
+        <span class="stat-value" id="totalClients">0</span>
+        <span class="stat-label">Clientes</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value" id="totalCuts">0</span>
+        <span class="stat-label">Cortes Totales</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value" id="totalBenefits">0</span>
+        <span class="stat-label">Premios Disponibles</span>
+      </div>
+    </section>
 
-            <div class="logo-icon">
-                ✂️
-            </div>
+    <!-- Sección de Copia de Seguridad -->
+    <section class="backup-section" style="display: flex; gap: 10px; margin: 15px 0;">
+      <button id="exportBtn" style="flex: 1; padding: 12px; background: #1a1a1a; color: #00ffcc; border: 1px solid #00ffcc; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px;">
+        📥 Guardar Copia
+      </button>
+      <button id="importBtn" style="flex: 1; padding: 12px; background: #1a1a1a; color: #ff007f; border: 1px solid #ff007f; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px;">
+        📤 Cargar Copia
+      </button>
+      <input type="file" id="importFile" accept=".json" style="display: none;">
+    </section>
 
-            <div>
-                <h1>Barber Lit Nath</h1>
-                <p>Sistema de fidelización</p>
-            </div>
+    <!-- Buscador -->
+    <section class="search-section">
+      <input type="text" id="searchInput" placeholder="🔎 Buscar cliente por nombre..." class="search-input">
+    </section>
 
+    <!-- Lista de Clientes -->
+    <section class="clients-section">
+      <div id="clientsList" class="clients-list"></div>
+    </section>
+
+  </main>
+
+  <!-- Modal: Agregar Cliente -->
+  <div id="clientModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Registrar Cliente</h2>
+        <span id="closeClientModal" class="close-btn">&times;</span>
+      </div>
+      <form id="clientForm">
+        <div class="form-group">
+          <label for="clientName">Nombre completo</label>
+          <input type="text" id="clientName" placeholder="Ej: Carlos Pérez" required>
+        </div>
+        <div class="form-group">
+          <label for="clientPhone">Teléfono (opcional)</label>
+          <input type="tel" id="clientPhone" placeholder="Ej: 3001234567">
+        </div>
+        <button type="submit" class="btn-primary full-width">Guardar Cliente</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Detalles del Cliente -->
+  <div id="detailsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Detalle del Cliente</h2>
+        <span id="closeDetailsModal" class="close-btn">&times;</span>
+      </div>
+      <div class="modal-body">
+        
+        <div class="client-detail-header">
+          <div id="detailAvatar" class="client-avatar-large">C</div>
+          <div>
+            <h3 id="detailName">Cargando...</h3>
+            <p id="detailPhone" class="detail-phone">📱 Sin teléfono</p>
+          </div>
         </div>
 
-    </header>
-
-
-    <main>
-
-        <section class="dashboard">
-
-            <div class="welcome">
-
-                <p class="small-title">
-                    DASHBOARD
-                </p>
-
-                <h2>
-                    Bienvenido, Natanael 👋
-                </h2>
-
-                <p>
-                    Administra fácilmente los cortes y beneficios de tus clientes.
-                </p>
-
-            </div>
-
-
-            <div class="stats">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        👥
-                    </div>
-
-                    <div>
-                        <p>Clientes</p>
-                        <strong id="totalClients">0</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        ✂️
-                    </div>
-
-                    <div>
-                        <p>Cortes registrados</p>
-                        <strong id="totalCuts">0</strong>
-                    </div>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <div class="stat-icon">
-                        🎁
-                    </div>
-
-                    <div>
-                        <p>Beneficios activos</p>
-                        <strong id="totalBenefits">0</strong>
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <section class="clients-section">
-
-                <div class="section-header">
-
-                    <div>
-                        <p class="small-title">
-                            CLIENTES
-                        </p>
-
-                        <h2>
-                            Mis clientes
-                        </h2>
-                    </div>
-
-                    <button
-                        id="addClientBtn"
-                        class="primary-button">
-
-                        ＋ Agregar cliente
-
-                    </button>
-
-                </div>
-
-
-                <div class="search-box">
-
-                    <span>🔎</span>
-
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Buscar cliente por nombre..."
-                    >
-
-                </div>
-
-
-                <div id="clientsList">
-
-                    <div class="empty-message">
-
-                        <div class="empty-icon">
-                            ✂️
-                        </div>
-
-                        <h3>
-                            No tienes clientes registrados
-                        </h3>
-
-                        <p>
-                            Agrega tu primer cliente para comenzar.
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-        </section>
-
-    </main>
-
-
-    <!-- MODAL NUEVO CLIENTE -->
-
-    <div
-        id="clientModal"
-        class="modal">
-
-        <div class="modal-content">
-
-            <button
-                class="close-modal"
-                id="closeClientModal">
-
-                ×
-
-            </button>
-
-
-            <div class="modal-icon">
-                👤
-            </div>
-
-
-            <h2>
-                Nuevo cliente
-            </h2>
-
-
-            <p class="modal-description">
-                Registra los datos de tu cliente.
-            </p>
-
-
-            <form id="clientForm">
-
-                <label for="clientName">
-                    Nombre
-                </label>
-
-                <input
-                    type="text"
-                    id="clientName"
-                    placeholder="Ej: Natanael Torres"
-                    required
-                >
-
-
-                <label for="clientPhone">
-                    Teléfono
-                </label>
-
-                <input
-                    type="tel"
-                    id="clientPhone"
-                    placeholder="Ej: 305*******"
-                >
-
-
-                <button
-                    type="submit"
-                    class="primary-button full-button">
-
-                    Registrar cliente
-
-                </button>
-
-            </form>
-
-        </div>
-
-    </div>
-
-
-    <!-- MODAL DETALLES -->
-
-    <div
-        id="detailsModal"
-        class="modal">
-
-        <div class="modal-content details-content">
-
-            <button
-                class="close-modal"
-                id="closeDetailsModal">
-
-                ×
-
-            </button>
-
-
-            <div
-                class="client-avatar"
-                id="detailAvatar">
-
-                J
-
-            </div>
-
-
-            <h2 id="detailName">
-                Cliente
-            </h2>
-
-
-            <p
-                class="detail-phone"
-                id="detailPhone">
-
-                📱 Sin teléfono
-
-            </p>
-
-
-            <div class="cuts-container">
-
-                <p class="small-title">
-                    FIDELIZACIÓN
-                </p>
-
-
-                <div class="cuts-number">
-
-                    <strong id="detailCuts">
-                        0
-                    </strong>
-
-                    <span>
-                        cortes
-                    </span>
-
-                </div>
-
-
-                <div class="progress-bar">
-
-                    <div
-                        id="progressFill"
-                        class="progress-fill">
-                    </div>
-
-                </div>
-
-
-                <p
-                    id="progressText"
-                    class="progress-text">
-
-                    Empieza registrando el primer corte.
-
-                </p>
-
-            </div>
-
-
-            <div
-                id="benefitBox"
-                class="benefit-box no-benefit">
-
-                <div class="benefit-icon">
-                    ✂️
-                </div>
-
-                <div>
-
-                    <strong id="benefitTitle">
-                        Corte normal
-                    </strong>
-
-                    <p id="benefitDescription">
-                        Este corte tiene precio normal.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="detail-buttons">
-
-                <button
-                    id="registerCutBtn"
-                    class="primary-button full-button">
-
-                    ＋ Registrar corte
-
-                </button>
-
-
-                <button
-                    id="useBenefitBtn"
-                    class="benefit-button full-button">
-
-                    🎁 Usar beneficio
-
-                </button>
-
-
-                <button
-                    id="deleteClientBtn"
-                    class="delete-button full-button">
-
-                    🗑 Eliminar cliente
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- NOTIFICACIÓN -->
-
-    <div
-        id="notification"
-        class="notification">
-
-        <span id="notificationText"></span>
-
-    </div>
-
-
-    <script src="script.js"></script>
-
-    <!-- Registro del Service Worker -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('Service Worker registrado con éxito', reg))
-                    .catch(err => console.log('Error al registrar Service Worker', err));
-            });
-        }
-    </script>
-
-</body>
-
-</html>
+        <div class="progress-container">
+          <div class="progress-labels">
+            <span>Progreso de cortes</span>
+            <span><strong id="detailCuts">0</strong> / 15 cortes</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill" style="width:
