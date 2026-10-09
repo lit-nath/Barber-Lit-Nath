@@ -68,16 +68,24 @@ function generateId() {
 function getBenefit(client) {
 
     if (
-        client.cuts === 3 &&
-        client.discountUsed !== true
+        client.cuts === 5 &&
+        client.discount5Used !== true
     ) {
 
-        return "discount";
+        return "discount20";
 
     }
 
+    if (
+        client.cuts === 10 &&
+        client.discount10Used !== true
+    ) {
 
-    if (client.cuts === 6) {
+        return "discount50";
+
+    }
+
+    if (client.cuts === 15) {
 
         return "free";
 
@@ -97,7 +105,14 @@ function getBenefitText(client) {
         getBenefit(client);
 
 
-    if (benefit === "discount") {
+    if (benefit === "discount20") {
+
+        return "💸 20% de descuento";
+
+    }
+
+
+    if (benefit === "discount50") {
 
         return "💸 50% de descuento";
 
@@ -483,7 +498,9 @@ clientForm.addEventListener(
 
             cuts: 0,
 
-            discountUsed: false
+            discount5Used: false,
+
+            discount10Used: false
 
         };
 
@@ -580,7 +597,7 @@ function updateClientDetails(client) {
 
 
     let progress =
-        (client.cuts / 6) * 100;
+        (client.cuts / 15) * 100;
 
 
     if (progress > 100) {
@@ -601,60 +618,69 @@ function updateClientDetails(client) {
 
     }
 
+    else if (client.cuts < 5) {
 
-    else if (client.cuts === 1) {
+        const remaining = 5 - client.cuts;
 
         progressText.textContent =
-            "Corte 1 registrado. Faltan 2 para el descuento.";
+            "Corte " + client.cuts + " registrado. Falta(n) " + remaining + " para el 20% de descuento.";
 
     }
 
+    else if (client.cuts === 5) {
 
-    else if (client.cuts === 2) {
-
-        progressText.textContent =
-            "Falta 1 corte para obtener el 50% de descuento.";
-
-    }
-
-
-    else if (client.cuts === 3) {
-
-        if (client.discountUsed === true) {
+        if (client.discount5Used === true) {
 
             progressText.textContent =
-                "Descuento utilizado. El próximo corte es normal.";
+                "Descuento de 20% utilizado. Próximos cortes normales.";
 
         } else {
 
             progressText.textContent =
-                "💸 Corte 3: 50% de descuento.";
+                "💸 Corte 5: 20% de descuento disponible.";
 
         }
 
     }
 
+    else if (client.cuts < 10) {
 
-    else if (client.cuts === 4) {
+        const remaining = 10 - client.cuts;
 
         progressText.textContent =
-            "✂️ Corte 4: precio normal. Faltan 2 para el gratis.";
+            "Corte " + client.cuts + " registrado. Falta(n) " + remaining + " para el 50% de descuento.";
 
     }
 
+    else if (client.cuts === 10) {
 
-    else if (client.cuts === 5) {
+        if (client.discount10Used === true) {
 
-        progressText.textContent =
-            "✂️ Corte 5: precio normal. Falta 1 para el gratis.";
+            progressText.textContent =
+                "Descuento de 50% utilizado. Próximos cortes normales.";
+
+        } else {
+
+            progressText.textContent =
+                "💸 Corte 10: 50% de descuento disponible.";
+
+        }
 
     }
 
+    else if (client.cuts < 15) {
 
-    else if (client.cuts === 6) {
+        const remaining = 15 - client.cuts;
 
         progressText.textContent =
-            "🎁 Corte 6: GRATIS.";
+            "Corte " + client.cuts + " registrado. Falta(n) " + remaining + " para el corte GRATIS.";
+
+    }
+
+    else if (client.cuts === 15) {
+
+        progressText.textContent =
+            "🎁 Corte 15: COMPLETAMENTE GRATIS.";
 
     }
 
@@ -663,18 +689,18 @@ function updateClientDetails(client) {
         getBenefit(client);
 
 
-    if (benefit === "discount") {
+    if (benefit === "discount20") {
 
         benefitBox.className =
             "benefit-box available";
 
 
         benefitTitle.textContent =
-            "💸 50% de descuento";
+            "💸 20% de descuento";
 
 
         benefitDescription.textContent =
-            "El corte número 3 tiene 50% de descuento.";
+            "El corte número 5 tiene 20% de descuento.";
 
 
         useBenefitBtn.style.display =
@@ -686,6 +712,28 @@ function updateClientDetails(client) {
 
     }
 
+    else if (benefit === "discount50") {
+
+        benefitBox.className =
+            "benefit-box available";
+
+
+        benefitTitle.textContent =
+            "💸 50% de descuento";
+
+
+        benefitDescription.textContent =
+            "El corte número 10 tiene 50% de descuento.";
+
+
+        useBenefitBtn.style.display =
+            "block";
+
+
+        registerCutBtn.style.display =
+            "block";
+
+    }
 
     else if (benefit === "free") {
 
@@ -698,7 +746,7 @@ function updateClientDetails(client) {
 
 
         benefitDescription.textContent =
-            "El corte número 6 es completamente gratis.";
+            "El corte número 15 es completamente gratis.";
 
 
         useBenefitBtn.style.display =
@@ -709,7 +757,6 @@ function updateClientDetails(client) {
             "none";
 
     }
-
 
     else {
 
@@ -758,7 +805,7 @@ registerCutBtn.addEventListener(
         }
 
 
-        if (client.cuts >= 6) {
+        if (client.cuts >= 15) {
 
             showNotification(
                 "⚠️ Primero debes utilizar el corte gratis."
@@ -786,23 +833,29 @@ registerCutBtn.addEventListener(
         );
 
 
-        if (client.cuts === 3) {
+        if (client.cuts === 5) {
 
             showNotification(
-                "💸 ¡Corte 3! Tiene 50% de descuento."
+                "💸 ¡Corte 5! Tiene 20% de descuento."
             );
 
         }
 
-
-        else if (client.cuts === 6) {
+        else if (client.cuts === 10) {
 
             showNotification(
-                "🎁 ¡Corte 6! Es completamente GRATIS."
+                "💸 ¡Corte 10! Tiene 50% de descuento."
             );
 
         }
 
+        else if (client.cuts === 15) {
+
+            showNotification(
+                "🎁 ¡Corte 15! Es completamente GRATIS."
+            );
+
+        }
 
         else {
 
@@ -841,11 +894,42 @@ useBenefitBtn.addEventListener(
             getBenefit(client);
 
 
-        // DESCUENTO
+        // DESCUENTO 20%
 
-        if (benefit === "discount") {
+        if (benefit === "discount20") {
 
-            client.discountUsed =
+            client.discount5Used =
+                true;
+
+
+            saveClients();
+
+
+            renderClients(
+                searchInput.value
+            );
+
+
+            updateClientDetails(
+                client
+            );
+
+
+            showNotification(
+                "💸 20% de descuento aplicado."
+            );
+
+
+            return;
+
+        }
+
+
+        // DESCUENTO 50%
+
+        if (benefit === "discount50") {
+
+            client.discount10Used =
                 true;
 
 
@@ -878,7 +962,10 @@ useBenefitBtn.addEventListener(
 
             client.cuts = 0;
 
-            client.discountUsed =
+            client.discount5Used =
+                false;
+
+            client.discount10Used =
                 false;
 
 
