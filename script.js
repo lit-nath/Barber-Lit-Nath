@@ -288,15 +288,30 @@ deleteClientBtn.addEventListener("click", () => {
 
 searchInput.addEventListener("input", () => renderClients(searchInput.value));
 
+// EXPORTAR COPIA DE SEGURIDAD (COMPATIBLE CON IOS Y SAFARI)
 if (exportBtn) {
-  exportBtn.addEventListener("click", () => {
-    if (clients.length === 0) return alert("No hay clientes para guardar.");
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(clients));
-    const a = document.createElement("a");
-    a.href = dataStr;
-    a.download = "barber_lit_nath_backup.json";
-    a.click();
-    showNotification("📥 Copia guardada");
+  exportBtn.addEventListener("click", function () {
+    if (clients.length === 0) {
+      alert("No tienes clientes para guardar en la copia de seguridad.");
+      return;
+    }
+
+    const dataStr = JSON.stringify(clients, null, 2);
+    const blob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const downloadAnchor = document.createElement("a");
+    downloadAnchor.href = url;
+    downloadAnchor.download = "barber_lit_nath_backup.json";
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+
+    setTimeout(() => {
+      document.body.removeChild(downloadAnchor);
+      URL.revokeObjectURL(url);
+    }, 100);
+
+    showNotification("📥 Copia de seguridad guardada con éxito");
   });
 }
 
